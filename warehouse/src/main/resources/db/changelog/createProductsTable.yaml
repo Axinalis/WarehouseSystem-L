@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - logicalFilePath: db.changelog-master.yaml
+  - changeSet:
+      id: 1
+      author: axinalis
+      labels: "CreateProductsTable"
+      comment: "Create table with list of all products in all stores"
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: store_id
+                  type: int
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: int
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: max_stock
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_stock
+                  type: int
+                  constraints:
+                    nullable: false

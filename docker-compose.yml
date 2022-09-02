@@ -1,0 +1,63 @@
+version: '2'
+services:
+  store:
+    build: ./store/
+    container_name: store
+    ports:
+      - "8083:8083"
+    environment:
+      KAFKA_BROKER: "kafka:9092"
+      REPORTS_TOPIC: "reports"
+      RESPONSE_TOPIC: "responses"
+      GROUP_ID: "kafka_group_id2"
+
+  warehouse:
+    build: ./warehouse/
+    container_name: warehouse
+    ports:
+      - "8090:8090"
+    environment:
+      DATABASE_USERNAME: "postgres"
+      DATABASE_PASSWORD: "password"
+      DATASOURCE_URL: "jdbc:postgresql://database:5432/products"
+      REPORTS_TOPIC: "reports"
+      RESPONSE_TOPIC: "responses"
+      KAFKA_BROKER: "kafka:9092"
+      GROUP_ID: "kafka_group_id"
+
+  database:
+    image: postgres:latest
+    container_name: postgre
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "products"
+      PGPASSWORD: "password"
+      PGUSER: "postgres"
+      PGDATABASE: "products"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_INT://kafka:9092,LISTENER_EXT://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_EXT:PLAINTEXT,LISTENER_INT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
