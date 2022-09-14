@@ -6,6 +6,7 @@ import com.axinalis.store.producer.ReportSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -18,6 +19,8 @@ public class MainRunner {
 
     private static Logger log = LoggerFactory.getLogger(MainRunner.class);
     private static AtomicBoolean mainCycle = new AtomicBoolean(true);
+    @Value("${sleep.time}")
+    private Long sleepTime;
     @Autowired
     private ReportSender sender;
     @Autowired
@@ -31,7 +34,7 @@ public class MainRunner {
         while(mainCycle.get()){
             log.debug("Main cycle is working");
             try{
-                Thread.sleep(1000 / database.getNumberOfStores());
+                Thread.sleep(sleepTime / database.getNumberOfStores());
             } catch(InterruptedException e){
                 log.error("Some error occurred during running main cycle: {}", e.getMessage());
             }

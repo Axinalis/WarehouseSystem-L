@@ -15,15 +15,18 @@ public class StoreItemEntity {
     private Long storeId;
     @Id
     private Long productId;
+    @Id
+    private Long categoryId;
     private Long maxStock;
     private Long currentStock;
 
     public StoreItemEntity() {
     }
 
-    public StoreItemEntity(Long storeId, Long productId, Long maxStock, Long currentStock) {
+    public StoreItemEntity(Long storeId, Long productId, Long categoryId, Long maxStock, Long currentStock) {
         this.storeId = storeId;
         this.productId = productId;
+        this.categoryId = categoryId;
         this.maxStock = maxStock;
         this.currentStock = currentStock;
     }
@@ -42,6 +45,14 @@ public class StoreItemEntity {
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Long getMaxStock() {
@@ -64,13 +75,13 @@ public class StoreItemEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StoreItemEntity that = (StoreItemEntity) o;
-        return Objects.equals(storeId, that.storeId) && Objects.equals(productId, that.productId) && Objects.equals(maxStock, that.maxStock) && Objects.equals(currentStock, that.currentStock);
+        StoreItemEntity entity = (StoreItemEntity) o;
+        return Objects.equals(storeId, entity.storeId) && Objects.equals(productId, entity.productId) && Objects.equals(categoryId, entity.categoryId) && Objects.equals(maxStock, entity.maxStock) && Objects.equals(currentStock, entity.currentStock);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(storeId, productId, maxStock, currentStock);
+        return Objects.hash(storeId, productId, categoryId, maxStock, currentStock);
     }
 
     @Override
@@ -78,6 +89,7 @@ public class StoreItemEntity {
         return "StoreItemEntity{" +
                 "storeId=" + storeId +
                 ", productId=" + productId +
+                ", categoryId=" + categoryId +
                 ", maxStock=" + maxStock +
                 ", currentStock=" + currentStock +
                 '}';

@@ -24,11 +24,13 @@ public class DataChanger {
                 for(StoreItem item : store.getStoreItemsByCategory(category)){
                     // Goes from 2% to 10% depending on category
                     if(Math.random() * 100 < database.getFrequencyOfCategory(category)){
+                        long newAmount = item.getCurrentStock() - randomValue(maxProductNumber);
                         changeSet.add(new ChangeSetItem(
                                 store.getStoreId(),
                                 category,
                                 item.getItemId(),
-                                -randomValue(maxProductNumber)));
+                                newAmount));
+                        item.setCurrentStock(newAmount);
                     }
                 }
             }

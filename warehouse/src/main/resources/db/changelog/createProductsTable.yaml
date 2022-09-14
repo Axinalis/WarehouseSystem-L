@@ -17,6 +17,13 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
+                  name: category_id
+                  type: int
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
                   name: product_id
                   type: int
                   autoIncrement: false

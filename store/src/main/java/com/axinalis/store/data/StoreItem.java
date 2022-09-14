@@ -59,7 +59,7 @@ public class StoreItem {
 
     public void setCurrentStock(Long currentStock) {
         if(currentStock <= 0){
-            throw new RuntimeException("Product " + this.title + " has ran out of stock");
+            throw new RuntimeException("Product \"" + this.title + "\" has ran out of stock");
         } else {
             this.currentStock = currentStock;
         }
@@ -67,7 +67,7 @@ public class StoreItem {
 
     public void decreaseCurrentStockBy(Integer decreasingAmount){
         if(this.currentStock - decreasingAmount <= 0){
-            throw new RuntimeException("Product " + this.title + " has ran out of stock");
+            throw new RuntimeException("Product \"" + this.title + "\" has ran out of stock");
         } else {
             this.currentStock -= decreasingAmount;
         }

@@ -7,16 +7,16 @@ public class ChangeSetItem {
     private Long storeId;
     private Long categoryId;
     private Long productId;
-    private Integer stockChange;
+    private Long currentStock;
 
     public ChangeSetItem() {
     }
 
-    public ChangeSetItem(Long storeId, Long categoryId, Long productId, Integer stockChange) {
+    public ChangeSetItem(Long storeId, Long categoryId, Long productId, Long currentStock) {
         this.storeId = storeId;
         this.categoryId = categoryId;
         this.productId = productId;
-        this.stockChange = stockChange;
+        this.currentStock = currentStock;
     }
 
     public Long getStoreId() {
@@ -43,12 +43,12 @@ public class ChangeSetItem {
         this.productId = productId;
     }
 
-    public Integer getStockChange() {
-        return stockChange;
+    public Long getCurrentStock() {
+        return currentStock;
     }
 
-    public void setStockChange(Integer stockChange) {
-        this.stockChange = stockChange;
+    public void setCurrentStock(Long currentStock) {
+        this.currentStock = currentStock;
     }
 
     @Override
@@ -56,12 +56,12 @@ public class ChangeSetItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChangeSetItem that = (ChangeSetItem) o;
-        return Objects.equals(storeId, that.storeId) && Objects.equals(categoryId, that.categoryId) && Objects.equals(productId, that.productId) && Objects.equals(stockChange, that.stockChange);
+        return Objects.equals(storeId, that.storeId) && Objects.equals(categoryId, that.categoryId) && Objects.equals(productId, that.productId) && Objects.equals(currentStock, that.currentStock);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(storeId, categoryId, productId, stockChange);
+        return Objects.hash(storeId, categoryId, productId, currentStock);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ChangeSetItem {
                 "storeId=" + storeId +
                 ", categoryId=" + categoryId +
                 ", productId=" + productId +
-                ", stockChange=" + stockChange +
+                ", stockChange=" + currentStock +
                 '}';
     }
 }

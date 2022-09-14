@@ -17,9 +17,7 @@ public class ResponseSender {
     private String responseTopic;
 
     public void sendResponse(String message){
-        log.info("2 - Sending the response to store");
         kafkaTemplate.send(responseTopic, "The response: " + message);
-        log.info("3 - Response to store was sent");
     }
 
 }
