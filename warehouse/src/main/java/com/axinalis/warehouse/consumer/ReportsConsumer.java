@@ -1,7 +1,5 @@
 package com.axinalis.warehouse.consumer;
 
-import com.axinalis.warehouse.producer.ResponseSender;
-import com.axinalis.warehouse.repository.StoreItemRepository;
 import com.axinalis.warehouse.service.ReportsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,18 +17,15 @@ import java.util.List;
 public class ReportsConsumer {
 
     private static Logger log = LoggerFactory.getLogger(ReportsConsumer.class);
-    @Autowired
-    private ResponseSender responseSender;
-    @Autowired
-    StoreItemRepository repository;
+
     @Autowired
     private ReportsService service;
     @Autowired
     private ObjectMapper mapper;
 
     @KafkaListener(topics = "${REPORTS_TOPIC}", groupId = "${GROUP_ID}")
-    public void listen(String message) {
-        List<ChangeSetItem> items = parseMessageToList(message);
+    public void listenReport(String report) {
+        List<ChangeSetItem> items = parseMessageToList(report);
 
         log.info("Report from stores was received. Number of changed stocks is {}", items.size());
         service.processReport(items);
@@ -66,5 +61,4 @@ public class ReportsConsumer {
            return false;
        }
     }
-
 }

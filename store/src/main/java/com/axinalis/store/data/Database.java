@@ -1,5 +1,6 @@
 package com.axinalis.store.data;
 
+import com.axinalis.store.changer.ChangeSetItem;
 import com.axinalis.store.loader.InitialLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +39,6 @@ public class Database {
     public void setStores(List<Store> stores) {
         this.stores = stores;
     }
-
-
 
     public Integer getFrequencyOfCategory(String category){
         for(CategoryItem item : categories){
@@ -83,6 +82,20 @@ public class Database {
         }
         log.warn("The category with id {} wasn't found in database class", id);
         throw new RuntimeException("The category wasn't found in database");
+    }
+
+    public void refillStocks(List<ChangeSetItem> items){
+        for(ChangeSetItem item : items){
+            Store store = stores
+                    .stream()
+                    .filter(str -> str.getStoreId().equals(item.getStoreId()))
+                    .findFirst()
+                    .orElseThrow();
+
+            for(StoreItem storeItem : store.getGoods().get(item.getCategoryId())){
+                storeItem.increaseCurrentStockBy(item.getCurrentStock());
+            }
+        }
     }
 
     @PostConstruct

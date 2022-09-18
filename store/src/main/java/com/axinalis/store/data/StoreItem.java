@@ -73,6 +73,14 @@ public class StoreItem {
         }
     }
 
+    public void increaseCurrentStockBy(Long increasingAmount){
+        if(this.currentStock + increasingAmount < 0){
+            throw new RuntimeException("Increasing with negative value is forbidden");
+        } else {
+            this.currentStock += increasingAmount;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

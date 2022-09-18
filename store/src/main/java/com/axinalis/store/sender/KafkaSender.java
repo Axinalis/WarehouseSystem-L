@@ -1,4 +1,4 @@
-package com.axinalis.store.producer;
+package com.axinalis.store.sender;
 
 import com.axinalis.store.changer.ChangeSetItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ReportSender {
+public class KafkaSender {
 
-    private static Logger log = LoggerFactory.getLogger(ReportSender.class);
+    private static Logger log = LoggerFactory.getLogger(KafkaSender.class);
     @Value("${REPORTS_TOPIC}")
     private String reportsTopic;
 
@@ -24,7 +24,7 @@ public class ReportSender {
     @Autowired
     private ObjectMapper mapper;
 
-    public void sendNewReport(List<ChangeSetItem> changeSet){
+    public void sendNewReport(List<ChangeSetItem> changeSet) {
         try {
             kafkaTemplate.send(reportsTopic, mapper.writeValueAsString(changeSet));
         } catch (JsonProcessingException e) {
@@ -32,5 +32,4 @@ public class ReportSender {
             throw new RuntimeException("Error while parsing changeSet to JSON format");
         }
     }
-
 }

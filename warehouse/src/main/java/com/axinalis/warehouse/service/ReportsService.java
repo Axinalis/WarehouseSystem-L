@@ -1,7 +1,9 @@
 package com.axinalis.warehouse.service;
 
 import com.axinalis.warehouse.consumer.ChangeSetItem;
+import com.axinalis.warehouse.sender.ResponseSender;
 import com.axinalis.warehouse.repository.StoreItemRepository;
+import com.axinalis.warehouse.service.publisher.StoreItemsPublisher;
 import com.axinalis.warehouse.service.subscriber.StoreItemsSub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,23 +20,32 @@ public class ReportsService {
 
     private static Logger log = LoggerFactory.getLogger(ReportsService.class);
 
-    private SinkPublisher publisher;
+    private StoreItemsPublisher publisher;
     @Autowired
     private StoreItemRepository repository;
+    @Autowired
+    private ResponseSender sender;
 
     @PostConstruct
     public void setupSink(){
-        this.publisher = new SinkPublisher();
+        this.publisher = new StoreItemsPublisher();
         ConnectableFlux<List<ChangeSetItem>> flux = Flux.create(this.publisher).publish();
 
-        for(int i = 0; i < 5; i++){
-            flux.subscribe(new StoreItemsSub("Sub " + i, repository));
+        for(int i = 0; i < 9; i++){
+            flux.subscribe(new StoreItemsSub("Sub " + (i + 1), repository, i + 1L, this));
         }
 
         flux.connect();
+
+        log.info("Initialization is complete");
     }
 
     public void processReport(List<ChangeSetItem> items){
         publisher.publishItems(items);
     }
+
+    public void processResponse(List<ChangeSetItem> items){
+        sender.sendTruckWithGoods(items);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.axinalis.warehouse.service;
+package com.axinalis.warehouse.service.publisher;
 
 import com.axinalis.warehouse.consumer.ChangeSetItem;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Component
-public class SinkPublisher implements Consumer<FluxSink<List<ChangeSetItem>>> {
+public class StoreItemsPublisher implements Consumer<FluxSink<List<ChangeSetItem>>> {
 
     private FluxSink<List<ChangeSetItem>> sink;
 
