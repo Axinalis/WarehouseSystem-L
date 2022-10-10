@@ -23,14 +23,15 @@ public class KafkaConsumerTest {
 
     @BeforeEach
     public void setup(){
-        service = Mockito.mock(StoreService.class);
-        consumer = new KafkaConsumer(mapper, service);
-        captor = ArgumentCaptor.forClass(List.class);
+        // I tried to add here initializing captor, service and consumer, but they're all somehow were null in runtime
     }
 
     @Test
     public void testReceivingValidInfo() throws JsonProcessingException{
         // given
+        captor = ArgumentCaptor.forClass(List.class);
+        service = Mockito.mock(StoreService.class);
+        consumer = new KafkaConsumer(mapper, service);
         List<ChangeSetItem> itemsSet = new ArrayList<>();
         itemsSet.add(new ChangeSetItem(1L, 2L, 23L, 199L));
         itemsSet.add(new ChangeSetItem(1L, 2L, 45L, 25L));
@@ -51,6 +52,9 @@ public class KafkaConsumerTest {
     @Test
     public void testReceivingBrokenInfo() throws JsonProcessingException{
         // given
+        captor = ArgumentCaptor.forClass(List.class);
+        service = Mockito.mock(StoreService.class);
+        consumer = new KafkaConsumer(mapper, service);
         String brokenString = "{\"id\":28, \"name\":\"Anton\"}";
 
         // when
