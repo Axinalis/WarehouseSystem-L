@@ -19,12 +19,21 @@ public class KafkaSender {
     @Value("${REPORTS_TOPIC}")
     private String reportsTopic;
 
-    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
-    @Autowired
     private ObjectMapper mapper;
 
+    public KafkaSender() {
+    }
+
+    public KafkaSender(@Autowired KafkaTemplate<String, String> kafkaTemplate, @Autowired ObjectMapper mapper) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.mapper = mapper;
+    }
+
     public void sendNewReport(List<ChangeSetItem> changeSet) {
+        if(changeSet == null){
+            throw new RuntimeException("Null pointer was passed instead of List");
+        }
         try {
             kafkaTemplate.send(reportsTopic, mapper.writeValueAsString(changeSet));
         } catch (JsonProcessingException e) {
