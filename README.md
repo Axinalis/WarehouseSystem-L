@@ -6,6 +6,6 @@ The **zookeeper** and **kafka** containers provide kafka for systems to communic
 
 The warehouse consumes data and decide whether it need to refill stock in different stores or send request to refill self stock. As warehouse deals with database, it spends more time on every request and is needed to be written with reactive programming. 
 
-To make system more loaded, we assume, that one day ends in 2 minutes, one store sends statistics about their goods every second (and if there is 2 stores, data will be emitted every half second and so on).
-To refill store stock, we need 20 seconds. To refill stock in warehouse, we need 40 seconds.
-All those values could be changed via config.
+To make system more loaded, we assume, that one day ends in ${day_time}, one store sends statistics about their goods every ${send_delay} (and if there is 2 stores, data will be emitted every ${send_delay/2} and so on).
+To refill store stock, we need ${refill_stock_time}. To refill stock in warehouse, we need ${refill_warehouse_time}.
+All those values are set via config.
