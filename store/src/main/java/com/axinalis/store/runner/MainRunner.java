@@ -1,7 +1,6 @@
 package com.axinalis.store.runner;
 
-import com.axinalis.store.changer.DataChanger;
-import com.axinalis.store.data.Database;
+import com.axinalis.store.changer.ChangeSetItem;
 import com.axinalis.store.sender.KafkaSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
@@ -20,26 +20,27 @@ public class MainRunner {
     private static AtomicBoolean mainCycle = new AtomicBoolean(true);
     @Value("${sleep.time}")
     private Long sleepTime;
-    @Autowired
     private KafkaSender sender;
-    @Autowired
-    private DataChanger changer;
-    @Autowired
-    private Database database;
+
+    public MainRunner() {
+    }
+
+    public MainRunner(@Autowired KafkaSender sender) {
+        this.sender = sender;
+    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void appMainCycle(){
+        List<ChangeSetItem> item = List.of(new ChangeSetItem(1L, 1L, 1L, 2L));
         log.debug("Main cycle is started");
         while(mainCycle.get()){
             try{
-                Thread.sleep(sleepTime / database.getNumberOfStores());
+                Thread.sleep(sleepTime);
             } catch(InterruptedException e){
                 log.error("Some error occurred during running main cycle: {}", e.getMessage());
                 stopMainCycle();
             }
-            log.debug("Sending new report to warehouse");
-            sender.sendNewReport(changer.changeData());
-            log.debug("The report to warehouse was sent");
+            sender.sendNewReport(item);
         }
         log.debug("Main cycle has ended");
     }
