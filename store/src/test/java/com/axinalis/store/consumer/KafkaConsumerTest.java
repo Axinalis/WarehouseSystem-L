@@ -1,43 +1,42 @@
 package com.axinalis.store.consumer;
 
+import com.axinalis.store.TestData;
 import com.axinalis.store.changer.ChangeSetItem;
 import com.axinalis.store.service.StoreService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class KafkaConsumerTest {
 
-    private StoreService service;
-    private KafkaConsumer consumer;
-    private ObjectMapper mapper = new ObjectMapper();
-    private ArgumentCaptor<List<ChangeSetItem>> captor;
+    private static StoreService service;
+    private static KafkaConsumer consumer;
+    private static ObjectMapper mapper;
+    private static ArgumentCaptor<List<ChangeSetItem>> captor;
 
-    @BeforeEach
-    public void setup(){
-        // I tried to add here initializing captor, service and consumer, but they're all somehow were null in runtime
+    @BeforeAll
+    public static void setup(){
+        service = Mockito.mock(StoreService.class);
+        mapper = new ObjectMapper();
+        consumer = new KafkaConsumer(mapper, service);
+        captor = ArgumentCaptor.forClass(List.class);
     }
 
     @Test
-    public void testReceivingValidInfo() throws JsonProcessingException{
+    public void testReceivingValidInfo() {
         // given
-        captor = ArgumentCaptor.forClass(List.class);
-        service = Mockito.mock(StoreService.class);
-        consumer = new KafkaConsumer(mapper, service);
-        List<ChangeSetItem> itemsSet = new ArrayList<>();
-        itemsSet.add(new ChangeSetItem(1L, 2L, 23L, 199L));
-        itemsSet.add(new ChangeSetItem(1L, 2L, 45L, 25L));
-        itemsSet.add(new ChangeSetItem(1L, 3L, 49L, 87L));
-        itemsSet.add(new ChangeSetItem(2L, 2L, 19L, 39L));
-        String stringWithItems = mapper.writeValueAsString(itemsSet);
+        List<ChangeSetItem> itemsSet = TestData.getChangeSet();
+        String stringWithItems = TestData.getChangeSetAsJson();
 
         // when
         consumer.listenResponse(stringWithItems);
@@ -45,23 +44,32 @@ public class KafkaConsumerTest {
         // then
         Mockito.verify(service).addToStocks(captor.capture());
         List<ChangeSetItem> result = captor.getValue();
-        Assertions.assertEquals(4, result.size());
-        Assertions.assertEquals(itemsSet, result);
+        assertThat(result.size()).isEqualTo(4);
+        assertThat(result).isEqualTo(itemsSet);
     }
 
     @Test
-    public void testReceivingBrokenInfo() throws JsonProcessingException{
+    public void testReceivingBrokenInfo() {
         // given
-        captor = ArgumentCaptor.forClass(List.class);
-        service = Mockito.mock(StoreService.class);
-        consumer = new KafkaConsumer(mapper, service);
-        String brokenString = "{\"id\":28, \"name\":\"Anton\"}";
+        String brokenString = TestData.getRandomJsonString();
 
         // when
-        Executable ex = () -> consumer.listenResponse(brokenString);
+        Executable listen = () -> consumer.listenResponse(brokenString);
 
         // then
-        Assertions.assertThrows(RuntimeException.class, ex);
+        assertThrows(RuntimeException.class, listen);
     }
 
+    @Test
+    public void testReadingValueWithObjectMapper() throws JsonProcessingException {
+        // given
+        List<ChangeSetItem> items = TestData.getChangeSet();
+        String message = TestData.getChangeSetAsJson();
+
+        // when
+        List<ChangeSetItem> listFromMessage = mapper.readValue(message, new TypeReference<List<ChangeSetItem>>() {});
+
+        // then
+        assertThat(listFromMessage).isEqualTo(items);
+    }
 }

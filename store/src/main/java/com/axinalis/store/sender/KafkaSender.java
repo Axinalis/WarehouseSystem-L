@@ -22,9 +22,6 @@ public class KafkaSender {
     private KafkaTemplate<String, String> kafkaTemplate;
     private ObjectMapper mapper;
 
-    public KafkaSender() {
-    }
-
     public KafkaSender(@Autowired KafkaTemplate<String, String> kafkaTemplate, @Autowired ObjectMapper mapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.mapper = mapper;

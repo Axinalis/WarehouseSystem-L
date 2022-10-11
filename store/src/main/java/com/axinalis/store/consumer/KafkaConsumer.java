@@ -21,9 +21,6 @@ public class KafkaConsumer {
     private ObjectMapper mapper;
     private StoreService service;
 
-    public KafkaConsumer() {
-    }
-
     public KafkaConsumer(@Autowired ObjectMapper mapper,
                          @Autowired StoreService service) {
         this.mapper = mapper;

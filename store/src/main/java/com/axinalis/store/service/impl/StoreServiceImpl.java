@@ -18,9 +18,6 @@ public class StoreServiceImpl implements StoreService {
 
     private StoreRepository repository;
 
-    public StoreServiceImpl() {
-    }
-
     public StoreServiceImpl(@Autowired StoreRepository repository) {
         this.repository = repository;
     }
