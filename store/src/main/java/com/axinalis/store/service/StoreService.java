@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface StoreService {
 
-    void addToStocks(List<ChangeSetItem> items);
+    void updateStocks(List<ChangeSetItem> items);
 
 }

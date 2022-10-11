@@ -34,6 +34,15 @@ public class TestData {
         return entities;
     }
 
+    public static List<ProductEntity> getOutOfStockEntities(){
+        List<ProductEntity> entities = new ArrayList<>();
+        entities.add(new ProductEntity(1L, 2L, 23L, 200L, 1L, "some product 1"));
+        entities.add(new ProductEntity(1L, 2L, 45L, 50L, 12L, "some product 2"));
+        entities.add(new ProductEntity(1L, 3L, 49L, 100L, 3L, "some product 3"));
+        entities.add(new ProductEntity(2L, 2L, 19L, 50L, 7L, "some product 4"));
+        return entities;
+    }
+
     public static List<FullProductId> getFullIds(){
         List<FullProductId> ids = new ArrayList<>();
         ids.add(new FullProductId(1L, 2L, 23L));

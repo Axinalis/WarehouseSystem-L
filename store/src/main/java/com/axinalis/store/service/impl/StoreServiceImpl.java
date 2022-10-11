@@ -23,7 +23,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public void addToStocks(List<ChangeSetItem> items) {
+    public void updateStocks(List<ChangeSetItem> items) {
         items.forEach(item -> {
             Optional<ProductEntity> entity =
                     repository.findById(

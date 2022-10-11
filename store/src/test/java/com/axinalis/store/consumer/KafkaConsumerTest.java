@@ -42,7 +42,7 @@ public class KafkaConsumerTest {
         consumer.listenResponse(stringWithItems);
 
         // then
-        Mockito.verify(service).addToStocks(captor.capture());
+        Mockito.verify(service).updateStocks(captor.capture());
         List<ChangeSetItem> result = captor.getValue();
         assertThat(result.size()).isEqualTo(4);
         assertThat(result).isEqualTo(itemsSet);

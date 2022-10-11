@@ -46,7 +46,7 @@ class StoreServiceImplTest {
         }
 
         // when
-        service.addToStocks(items);
+        service.updateStocks(items);
 
         // then
         Mockito.verify(repository, times(items.size())).findById(any());
@@ -62,7 +62,7 @@ class StoreServiceImplTest {
                 .thenReturn(Optional.empty());
 
         // when
-        service.addToStocks(items);
+        service.updateStocks(items);
 
         // then
         Mockito.verify(repository, times(items.size())).findById(any());
