@@ -18,15 +18,12 @@ public class StoreServiceImpl implements StoreService {
 
     private StoreRepository repository;
 
-    public StoreServiceImpl() {
-    }
-
     public StoreServiceImpl(@Autowired StoreRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public void addToStocks(List<ChangeSetItem> items) {
+    public void updateStocks(List<ChangeSetItem> items) {
         items.forEach(item -> {
             Optional<ProductEntity> entity =
                     repository.findById(

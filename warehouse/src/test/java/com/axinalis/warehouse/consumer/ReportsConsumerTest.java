@@ -1,8 +1,7 @@
-package com.axinalis.store.consumer;
+package com.axinalis.warehouse.consumer;
 
-import com.axinalis.store.TestData;
-import com.axinalis.store.changer.ChangeSetItem;
-import com.axinalis.store.service.StoreService;
+import com.axinalis.warehouse.TestData;
+import com.axinalis.warehouse.service.impl.ReportsServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,41 +13,41 @@ import org.mockito.Mockito;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class KafkaConsumerTest {
+class ReportsConsumerTest {
 
-    private static StoreService service;
-    private static KafkaConsumer consumer;
     private static ObjectMapper mapper;
+    private static ReportsConsumer consumer;
+    private static ReportsServiceImpl service;
 
     @BeforeAll
     public static void setup(){
-        service = Mockito.mock(StoreService.class);
         mapper = new ObjectMapper();
-        consumer = new KafkaConsumer(mapper, service);
+        service = Mockito.mock(ReportsServiceImpl.class);
+        consumer = new ReportsConsumer(service, mapper);
     }
 
     @Test
-    public void testReceivingValidInfo() {
+    public void testReceivingValidMessage(){
         // given
-        List<ChangeSetItem> itemsSet = TestData.getChangeSet();
-        String stringWithItems = TestData.getChangeSetAsJson();
+        String message = TestData.getChangeSetAsJson();
+        List<ChangeSetItem> items = TestData.getChangeSet();
 
         // when
-        consumer.listenResponse(stringWithItems);
+        consumer.listenReport(message);
 
         // then
-        Mockito.verify(service).updateStocks(itemsSet);
+        Mockito.verify(service).processReport(items);
     }
 
     @Test
-    public void testReceivingBrokenInfo() {
+    public void testReceivingInvalidMessage(){
         // given
-        String brokenString = TestData.getRandomJsonString();
+        String message = TestData.getRandomJsonString();
 
         // when
-        Executable listen = () -> consumer.listenResponse(brokenString);
+        Executable listen = () -> consumer.listenReport(message);
 
         // then
         assertThrows(RuntimeException.class, listen);
@@ -66,4 +65,5 @@ public class KafkaConsumerTest {
         // then
         assertThat(listFromMessage).isEqualTo(items);
     }
+
 }

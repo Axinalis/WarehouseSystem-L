@@ -21,9 +21,6 @@ public class KafkaConsumer {
     private ObjectMapper mapper;
     private StoreService service;
 
-    public KafkaConsumer() {
-    }
-
     public KafkaConsumer(@Autowired ObjectMapper mapper,
                          @Autowired StoreService service) {
         this.mapper = mapper;
@@ -34,7 +31,7 @@ public class KafkaConsumer {
     public void listenResponse(String truckWithItems){
         List<ChangeSetItem> items = parseMessageToList(truckWithItems);
         log.info("The truck with goods has arrived successfully");
-        service.addToStocks(items);
+        service.updateStocks(items);
     }
 
     private List<ChangeSetItem> parseMessageToList(String message){
