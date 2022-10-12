@@ -9,7 +9,6 @@ import org.reactivestreams.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
 import java.util.List;
 
 public class StoreItemsSub implements Subscriber<List<ChangeSetItem>> {
@@ -19,7 +18,6 @@ public class StoreItemsSub implements Subscriber<List<ChangeSetItem>> {
     private Long storeId;
 
     private String subName;
-    private Subscription subscription;
     private StoreItemRepository repository;
     private ReportsService service;
 
@@ -32,7 +30,7 @@ public class StoreItemsSub implements Subscriber<List<ChangeSetItem>> {
         this.storeId = storeId;
     }
 
-    public StoreItemsSub(String subName, StoreItemRepository repository, Long storeId, ReportsService service) {
+    public StoreItemsSub(String subName, Long storeId, StoreItemRepository repository, ReportsService service) {
         this.subName = subName;
         this.repository = repository;
         this.storeId = storeId;
@@ -49,7 +47,6 @@ public class StoreItemsSub implements Subscriber<List<ChangeSetItem>> {
 
     @Override
     public void onSubscribe(Subscription subscription) {
-        this.subscription = subscription;
         log.debug("{}: onSubscribe is called", subName);
         subscription.request(Long.MAX_VALUE);
         log.debug("{}: all items are requested", subName);

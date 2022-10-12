@@ -22,16 +22,13 @@ public class MainRunner {
     private Long sleepTime;
     private KafkaSender sender;
 
-    public MainRunner() {
-    }
-
     public MainRunner(@Autowired KafkaSender sender) {
         this.sender = sender;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void appMainCycle(){
-        List<ChangeSetItem> item = List.of(new ChangeSetItem(1L, 1L, 1L, 2L));
+        List<ChangeSetItem> item = List.of(new ChangeSetItem(1L, 1L, 1L, -2L));
         log.debug("Main cycle is started");
         while(mainCycle.get()){
             try{
